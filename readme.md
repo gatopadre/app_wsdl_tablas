@@ -23,3 +23,13 @@ select count(*) from tablas_parametros;
 nohup python3.6 main.py
 
 ps ax | grep "python3.6"
+
+
+CREATE TABLE tablas_parametros ( 
+    id INT auto_increment NOT NULL, 
+    tabla_path varchar(5000) NULL, 
+    creado_en DATETIME DEFAULT current_timestamp() NULL, 
+    estado BOOL DEFAULT 1 NULL, 
+    modificado_en DATETIME DEFAULT current_timestamp() NULL, 
+    CONSTRAINT tablas_parametros_pk PRIMARY KEY (id) ) 
+    ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
