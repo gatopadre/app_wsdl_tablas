@@ -3,7 +3,7 @@ require_once('nusoap-0.9.5/lib/nusoap.php');
 # constantes
 define('HOST', 'http://servicio-tablas.cl/');
 define('PYTHON_HOST', 'http://localhost:8085/');
-define('NOT_FOUND_CLAVE', 'La clave no fue encontrada.');
+define('NOT_FOUND_CLAVE', null);
 define('NOT_FOUND_CODIGO', 'El campo codigo no fue encontrado en la tabla.');
 define('NOT_FOUND_SERVICE', 'El servicio para conseguir las tablas esta caido.');
 define('EMPTY_FIELD_MESSAGE', 'El campo no puede estar vacio.');
@@ -55,13 +55,17 @@ $server->register(
 
 function get_url_from_file($word_search)
 {
+      // instancian las constantes
       $constants =  get_defined_constants(true);
+      
+      // validando que venga la clave
       if (empty($word_search['clave'])) {
             return array(
                   'parametro' => $constants['user']['EMPTY_FIELD_MESSAGE']
             );
       }
       
+      // buscando el path de la ubicacion del archivo, a traves de un servicio, escrito en python
       $cliente = curl_init();
 	curl_setopt($cliente, CURLOPT_URL, $constants['user']['PYTHON_HOST'].'path_tabla/');
       curl_setopt($cliente, CURLOPT_RETURNTRANSFER, true);
