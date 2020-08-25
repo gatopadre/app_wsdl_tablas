@@ -143,23 +143,4 @@ function search_url($texto_completo, $data)
       );
 }
 
-function recorrer_arbol($directorio_base, $archivo_buscado, &$path)
-{
-      if (is_dir($directorio_base)) { // validando que sea directorio
-            if ($lectura_directorio = opendir($directorio_base)) {
-                  while (($archivo = readdir($lectura_directorio)) !== false) {
-                        if (is_dir($directorio_base . $archivo) && $archivo!='.' && $archivo!='..'){
-                              recorrer_arbol($directorio_base . $archivo . '/', $archivo_buscado, $path);
-                        } else {
-                              if ($archivo == $archivo_buscado) {                                    
-                                    $dato = $directorio_base.$archivo;
-                                    array_push($path, $dato);
-                              }
-                        }
-                  }
-                  closedir($lectura_directorio);
-            }
-      }
-}
-
 @$server->service(file_get_contents('php://input'));
