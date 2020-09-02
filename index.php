@@ -4,7 +4,7 @@ require_once('nusoap-0.9.5/lib/nusoap.php');
 define('HOST', 'http://servicio-tablas.cl/');
 define('PYTHON_HOST', 'http://localhost:8085/');
 define('NOT_FOUND_CLAVE', null);
-define('NOT_FOUND_CODIGO', 'El campo codigo no fue encontrado en la tabla.');
+define('NOT_FOUND_CODIGO', null);
 define('NOT_FOUND_SERVICE', 'El servicio para conseguir las tablas esta caido.');
 define('EMPTY_FIELD_MESSAGE', 'El campo no puede estar vacio.');
 define('DELIMITER_1', ';');
@@ -95,6 +95,7 @@ function get_url_from_file($word_search)
 
       try {
             $file_content = file_get_contents($file_path);
+
             $find = strpos($file_content, strval($word_search['clave']));
             if ($find === false) {
                   // para que se refresque el arbol de las tablas en la bd
@@ -121,6 +122,7 @@ function get_url_from_file($word_search)
 
 function search_url($texto_completo, $data)
 {
+      $texto_completo = nl2br($texto_completo);
       $palabra_buscada = $data['clave'].';';
       $codigo_buscado = $data['codigo'].'=';
       $largo_palabra_buscada = strlen($palabra_buscada);  
@@ -128,8 +130,10 @@ function search_url($texto_completo, $data)
       $constants =  get_defined_constants(true);
       $palabra_buscada_position = strpos($texto_completo, strval($palabra_buscada)); 
       $punto_de_partida = $palabra_buscada_position + $largo_palabra_buscada;
+      $posicion_br = strpos($texto_completo,"<br />", $punto_de_partida);
       $posicion_codigo = strpos($texto_completo, $codigo_buscado, $punto_de_partida);
-      if (!$posicion_codigo) {
+
+      if (!$posicion_codigo || ($posicion_codigo > $posicion_br)) {
             return array(
                   'parametro' => $constants['user']['NOT_FOUND_CODIGO']
             );
@@ -141,25 +145,6 @@ function search_url($texto_completo, $data)
       return array(
             'parametro' => $url
       );
-}
-
-function recorrer_arbol($directorio_base, $archivo_buscado, &$path)
-{
-      if (is_dir($directorio_base)) { // validando que sea directorio
-            if ($lectura_directorio = opendir($directorio_base)) {
-                  while (($archivo = readdir($lectura_directorio)) !== false) {
-                        if (is_dir($directorio_base . $archivo) && $archivo!='.' && $archivo!='..'){
-                              recorrer_arbol($directorio_base . $archivo . '/', $archivo_buscado, $path);
-                        } else {
-                              if ($archivo == $archivo_buscado) {                                    
-                                    $dato = $directorio_base.$archivo;
-                                    array_push($path, $dato);
-                              }
-                        }
-                  }
-                  closedir($lectura_directorio);
-            }
-      }
 }
 
 @$server->service(file_get_contents('php://input'));
