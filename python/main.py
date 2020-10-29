@@ -40,7 +40,8 @@ def path_table():
     if len(nombre_archivo) < 5:
         return "El nombre del archivo no es valido."
     db = connection.connect()
-    cursor = connection.executeQuery(db,'SELECT tabla_path AS url FROM {} WHERE tabla_path like "%{}" LIMIT 1'.format(tabla, nombre_archivo))
+    cursor = connection.executeQuery(db,'SELECT tabla_path AS url FROM {} WHERE  tabla_path like "%{}"  order by length(tabla_path) asc LIMIT 1'.format(tabla, nombre_archivo)) 
+    #cursor = connection.executeQuery(db,'SELECT tabla_path AS url FROM {} WHERE tabla_path like "%{}" LIMIT 1'.format(tabla, nombre_archivo))
     print('Ejecutando querie: {}'.format('SELECT tabla_path AS url FROM {} WHERE tabla_path like "%{}" LIMIT 1'.format(tabla, nombre_archivo)))
     data = cursor.fetchone()
     if data is None:
