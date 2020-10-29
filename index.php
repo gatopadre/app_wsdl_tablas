@@ -55,6 +55,20 @@ $server->register(
 
 function get_url_from_file($word_search)
 {
+      # solo cuando es PagueDirecto.parametros se ira a buscar a sybase antes de el resto
+      if ($word_search['file'] == 'PagueDirecto.parametros') {
+            $cnn = sybase_connect('cepimeteo_II', 'everistdm', 'chi08le!', 'utf_8', 'tdm');          
+            $query = "SELECT id, clave, tipo, valor FROM tdm.dbo.DATOS_TABLA_PARAMETROS WHERE clave='".$word_search['clave']. "' AND tipo ='". $word_search['codigo']."'";
+            $result = sybase_query($query,$cnn);
+            while ($row = sybase_fetch_object($result)) {
+                var_dump ($row);
+            } 
+            sybase_close($cnn);
+            return array(
+                  'parametro' => 'bci lo mah grande'
+            );
+      }
+
       // instancian las constantes
       $constants =  get_defined_constants(true);
       
