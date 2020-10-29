@@ -60,12 +60,18 @@ function get_url_from_file($word_search)
             $cnn = sybase_connect('cepimeteo_II', 'everistdm', 'chi08le!', 'utf_8', 'tdm');          
             $query = "SELECT id, clave, tipo, valor FROM tdm.dbo.DATOS_TABLA_PARAMETROS WHERE clave='".$word_search['clave']. "' AND tipo ='". $word_search['codigo']."'";
             $result = sybase_query($query,$cnn);
-            while ($row = sybase_fetch_object($result)) {
-                var_dump ($row);
-            } 
+
+            if (sybase_num_rows($result) == 1) {
+                  $row = sybase_fetch_object($result);
+                  $url = $row['valor'];
+            } else {
+                  # site piden seguir con la logica normal en vez de devolver vacio, debes
+                  # quitar el else y meter todo el resto dentro del if anterior
+                  $url = $constants['user']['NOT_FOUND_CLAVE'];
+            }
             sybase_close($cnn);
             return array(
-                  'parametro' => 'bci lo mah grande'
+                  'parametro' => $url
             );
       }
 
