@@ -62,8 +62,9 @@ function get_url_from_file($word_search)
             $result = sybase_query($query,$cnn);
 
             if (sybase_num_rows($result) == 1) {
+                  
                   $row = sybase_fetch_object($result);
-                  $url = $row['valor'];
+                  $url = $row->valor;
             } else {
                   # site piden seguir con la logica normal en vez de devolver vacio, debes
                   # quitar el else y meter todo el resto dentro del if anterior
