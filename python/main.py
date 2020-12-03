@@ -46,6 +46,7 @@ def path_table():
     if data is None:
         return 'Archivo de tabla no existe'
     else:
+        print(data[0])
         return data[0]
 
 if __name__== '__main__':
