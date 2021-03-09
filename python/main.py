@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 import mysql_db as connection
 import os
 
-ruta_raiz = "/opt/lampp/htdocs/wsdl_tablas" #url raiz del arbol que contiene los archivos
+ruta_raiz = "/opt/lampp/htdocs/pruebas_wsdl_tablas" #url raiz del arbol que contiene los archivos
 tabla = 'tablas_parametros' # tabla de la base de datos
 
 app =  Flask(__name__)
@@ -21,15 +21,16 @@ def actualizar_tablas():
     db = connection.connect()
     truncate = connection.executeUpdate(db,'TRUNCATE TABLE {}'.format(tabla))
     if truncate:
-        print('Actualizando arbol de tablas en la bd')
-        for dirpath, dirnames, filenames in os.walk(ruta_raiz):
-            if filenames:                
-                for file_name in filenames:                      
-                    if file_name.find('.parametros') > 0 and file_name.find('.parametros') + len('.parametros') == len(file_name):
-                        dirpath_encode = dirpath.encode('utf-8', 'surrogateescape').decode('utf-8', 'replace')
-                        filepath_encode = file_name.encode('utf-8', 'surrogateescape').decode('utf-8', 'replace') 
-                        query = 'INSERT INTO tablas_parametros (tabla_path) VALUES ("{}")'.format(dirpath_encode + '/' + filepath_encode)
-                        connection.executeUpdate(db,query)
+      print('Actualizando arbol de tablas en la bd')
+      for dirpath, dirnames, filenames in os.walk(ruta_raiz):
+        print ('debugueando')
+        if filenames:                
+            for file_name in filenames:                      
+                if file_name.find('.parametros') > 0 and file_name.find('.parametros') + len('.parametros') == len(file_name):
+                    dirpath_encode = dirpath.encode('utf-8', 'surrogateescape').decode('utf-8', 'replace')
+                    filepath_encode = file_name.encode('utf-8', 'surrogateescape').decode('utf-8', 'replace') 
+                    query = 'INSERT INTO tablas_parametros (tabla_path) VALUES ("{}")'.format(dirpath_encode + '/' + filepath_encode)
+                    connection.executeUpdate(db,query)
     connection.disconnect(db)
     return "Proceso de actualizacion de tablas realizado exitosamente."
 
